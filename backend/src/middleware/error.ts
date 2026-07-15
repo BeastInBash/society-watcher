@@ -7,12 +7,7 @@ export function notFoundHandler(_req: Request, res: Response) {
 }
 
 // Centralised error handler — must be the last middleware registered.
-export function errorHandler(
-  err: unknown,
-  _req: Request,
-  res: Response,
-  _next: NextFunction
-) {
+export function errorHandler(err: unknown, _req: Request, res: Response, _next: NextFunction) {
   if (err instanceof AppError) {
     return res.status(err.status).json({ error: err.message, details: err.details });
   }

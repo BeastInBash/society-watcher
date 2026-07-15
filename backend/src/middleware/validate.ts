@@ -18,8 +18,8 @@ export const validate =
         return next(
           badRequest(
             "Validation failed",
-            err.issues.map((i) => ({ path: i.path.join("."), message: i.message }))
-          )
+            err.issues.map((i) => ({ path: i.path.join("."), message: i.message })),
+          ),
         );
       }
       next(err);

@@ -11,8 +11,7 @@ export const preApprovalsRouter = Router();
 preApprovalsRouter.use(authenticate);
 
 const genCode = () =>
-  Math.random().toString(36).slice(2, 6).toUpperCase() +
-  Math.floor(1000 + Math.random() * 9000);
+  Math.random().toString(36).slice(2, 6).toUpperCase() + Math.floor(1000 + Math.random() * 9000);
 
 // ── Resident: list my pre-approvals ──
 preApprovalsRouter.get(
@@ -25,7 +24,7 @@ preApprovalsRouter.get(
       orderBy: { createdAt: "desc" },
     });
     res.json({ preApprovals });
-  })
+  }),
 );
 
 // ── Resident: create a pre-approval / gate pass ──
@@ -56,7 +55,7 @@ preApprovalsRouter.post(
       },
     });
     res.status(201).json({ preApproval });
-  })
+  }),
 );
 
 // ── Resident: cancel a pre-approval ──
@@ -74,5 +73,5 @@ preApprovalsRouter.post(
       data: { status: "CANCELLED" },
     });
     res.json({ preApproval });
-  })
+  }),
 );

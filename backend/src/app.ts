@@ -27,7 +27,7 @@ export function createApp() {
     cors({
       origin: env.corsOrigin === "*" ? true : env.corsOrigin.split(","),
       credentials: true,
-    })
+    }),
   );
   app.use(express.json({ limit: "2mb" }));
   if (!env.isProd) app.use(morgan("dev"));

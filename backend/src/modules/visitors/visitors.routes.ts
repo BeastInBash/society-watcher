@@ -27,7 +27,7 @@ visitorsRouter.get(
       include: { registeredBy: { select: { id: true, name: true } } },
     });
     res.json({ visitors });
-  })
+  }),
 );
 
 // ── Resident: pending approvals awaiting my action ──
@@ -41,7 +41,7 @@ visitorsRouter.get(
       orderBy: { createdAt: "desc" },
     });
     res.json({ visitors });
-  })
+  }),
 );
 
 // ── Resident: visitor history for my flat ──
@@ -59,7 +59,7 @@ visitorsRouter.get(
       take: 100,
     });
     res.json({ visitors });
-  })
+  }),
 );
 
 // ── Resident: single visitor ──
@@ -74,13 +74,19 @@ visitorsRouter.get(
     });
     if (!visitor) throw notFound("Visitor not found");
     res.json({ visitor });
-  })
+  }),
 );
 
 // ── Resident: approve / deny a pending visitor ──
 const decideSchema = z.object({ note: z.string().max(280).optional() });
 
-async function decide(id: string, residentId: string, flatId: string, approve: boolean, note?: string) {
+async function decide(
+  id: string,
+  residentId: string,
+  flatId: string,
+  approve: boolean,
+  note?: string,
+) {
   const visitor = await prisma.visitor.findFirst({ where: { id, flatId } });
   if (!visitor) throw notFound("Visitor not found");
   if (visitor.status !== "PENDING") throw forbidden("Visitor is no longer pending");
@@ -120,7 +126,7 @@ visitorsRouter.post(
       });
     }
     res.json({ visitor });
-  })
+  }),
 );
 
 visitorsRouter.post(
@@ -140,5 +146,5 @@ visitorsRouter.post(
       });
     }
     res.json({ visitor });
-  })
+  }),
 );

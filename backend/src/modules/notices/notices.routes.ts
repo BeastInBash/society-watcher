@@ -24,7 +24,7 @@ noticesRouter.get(
       include: { author: { select: { id: true, name: true } } },
     });
     res.json({ notices });
-  })
+  }),
 );
 
 noticesRouter.get(
@@ -36,7 +36,7 @@ noticesRouter.get(
     });
     if (!notice) throw notFound("Notice not found");
     res.json({ notice });
-  })
+  }),
 );
 
 // ── Admin: publish a notice ──
@@ -70,7 +70,7 @@ noticesRouter.post(
       data: { noticeId: notice.id },
     });
     res.status(201).json({ notice });
-  })
+  }),
 );
 
 noticesRouter.delete(
@@ -79,5 +79,5 @@ noticesRouter.delete(
   asyncHandler(async (req, res) => {
     await prisma.notice.delete({ where: { id: req.params.id } });
     res.json({ ok: true });
-  })
+  }),
 );

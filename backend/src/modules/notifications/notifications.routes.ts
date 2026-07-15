@@ -16,7 +16,7 @@ notificationsRouter.get(
     });
     const unread = notifications.filter((n) => !n.read).length;
     res.json({ notifications, unread });
-  })
+  }),
 );
 
 notificationsRouter.post(
@@ -27,7 +27,7 @@ notificationsRouter.post(
       data: { read: true },
     });
     res.json({ ok: true });
-  })
+  }),
 );
 
 notificationsRouter.post(
@@ -38,5 +38,5 @@ notificationsRouter.post(
       data: { read: true },
     });
     res.json({ ok: true });
-  })
+  }),
 );

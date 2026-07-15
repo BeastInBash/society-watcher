@@ -2,11 +2,7 @@ import { Router } from "express";
 import { z } from "zod";
 import { prisma } from "../../lib/prisma.ts";
 import { hashPassword, verifyPassword } from "../../lib/password.ts";
-import {
-  signAccessToken,
-  signRefreshToken,
-  verifyRefreshToken,
-} from "../../lib/jwt.ts";
+import { signAccessToken, signRefreshToken, verifyRefreshToken } from "../../lib/jwt.ts";
 import { validate } from "../../middleware/validate.ts";
 import { authenticate } from "../../middleware/auth.ts";
 import { asyncHandler, badRequest, conflict, unauthorized } from "../../utils/http.ts";
@@ -55,8 +51,9 @@ authRouter.post(
   "/register",
   validate(registerSchema),
   asyncHandler(async (req, res) => {
-    const { name, email, phone, password, societyCode, flatId, residentType } =
-      req.body as z.infer<typeof registerSchema>;
+    const { name, email, phone, password, societyCode, flatId, residentType } = req.body as z.infer<
+      typeof registerSchema
+    >;
 
     const society = await prisma.society.findUnique({ where: { code: societyCode } });
     if (!society) throw badRequest("Invalid society code");
@@ -84,7 +81,7 @@ authRouter.post(
 
     const tokens = await issueTokens(user);
     res.status(201).json({ user, ...tokens });
-  })
+  }),
 );
 
 // ── Login ──
@@ -117,7 +114,7 @@ authRouter.post(
       },
       ...tokens,
     });
-  })
+  }),
 );
 
 // ── Refresh access token ──
@@ -149,7 +146,7 @@ authRouter.post(
       societyId: user.societyId,
     });
     res.json({ accessToken });
-  })
+  }),
 );
 
 // ── Logout (revoke refresh token) ──
@@ -165,7 +162,7 @@ authRouter.post(
       });
     }
     res.json({ ok: true });
-  })
+  }),
 );
 
 // ── Current user profile ──
@@ -194,7 +191,7 @@ authRouter.get(
       },
     });
     res.json({ user });
-  })
+  }),
 );
 
 // ── Register an Expo push token for the current device ──
@@ -215,5 +212,5 @@ authRouter.post(
       create: { token, platform, userId: req.user!.id },
     });
     res.json({ ok: true });
-  })
+  }),
 );

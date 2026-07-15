@@ -20,7 +20,7 @@ amenitiesRouter.get(
       orderBy: { name: "asc" },
     });
     res.json({ amenities });
-  })
+  }),
 );
 
 // ── Bookings for an amenity on a date (to show taken slots) ──
@@ -42,7 +42,7 @@ amenitiesRouter.get(
       select: { id: true, startTime: true, endTime: true, userId: true },
     });
     res.json({ bookings });
-  })
+  }),
 );
 
 // ── My bookings ──
@@ -55,7 +55,7 @@ amenitiesRouter.get(
       include: { amenity: { select: { id: true, name: true } } },
     });
     res.json({ bookings });
-  })
+  }),
 );
 
 // ── Book a slot ──
@@ -101,7 +101,7 @@ amenitiesRouter.post(
       include: { amenity: { select: { name: true } } },
     });
     res.status(201).json({ booking });
-  })
+  }),
 );
 
 // ── Cancel my booking ──
@@ -117,7 +117,7 @@ amenitiesRouter.post(
       data: { status: "CANCELLED" },
     });
     res.json({ booking });
-  })
+  }),
 );
 
 // ── Admin: create / update amenity ──
@@ -141,5 +141,5 @@ amenitiesRouter.post(
       data: { ...(req.body as z.infer<typeof amenitySchema>), societyId },
     });
     res.status(201).json({ amenity });
-  })
+  }),
 );

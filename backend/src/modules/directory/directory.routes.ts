@@ -20,7 +20,7 @@ directoryRouter.get(
       orderBy: { name: "asc" },
     });
     res.json({ staff });
-  })
+  }),
 );
 
 const staffSchema = z.object({
@@ -41,7 +41,7 @@ directoryRouter.post(
       data: { ...(req.body as z.infer<typeof staffSchema>), societyId },
     });
     res.status(201).json({ staff });
-  })
+  }),
 );
 
 // ── Service provider directory ──
@@ -55,7 +55,7 @@ directoryRouter.get(
       orderBy: [{ verified: "desc" }, { name: "asc" }],
     });
     res.json({ providers });
-  })
+  }),
 );
 
 const providerSchema = z.object({
@@ -76,5 +76,5 @@ directoryRouter.post(
       data: { ...(req.body as z.infer<typeof providerSchema>), societyId },
     });
     res.status(201).json({ provider });
-  })
+  }),
 );

@@ -12,8 +12,14 @@ export const complaintsRouter = Router();
 complaintsRouter.use(authenticate);
 
 const CATEGORIES = [
-  "PLUMBING", "ELECTRICAL", "HOUSEKEEPING", "SECURITY",
-  "ELEVATOR", "PARKING", "NOISE", "OTHER",
+  "PLUMBING",
+  "ELECTRICAL",
+  "HOUSEKEEPING",
+  "SECURITY",
+  "ELEVATOR",
+  "PARKING",
+  "NOISE",
+  "OTHER",
 ] as const;
 
 // ── List: residents see their own; admins see the whole society ──
@@ -37,7 +43,7 @@ complaintsRouter.get(
       },
     });
     res.json({ complaints });
-  })
+  }),
 );
 
 // ── Single complaint with thread ──
@@ -60,7 +66,7 @@ complaintsRouter.get(
       throw notFound("Complaint not found");
     }
     res.json({ complaint });
-  })
+  }),
 );
 
 // ── Resident: raise a complaint ──
@@ -96,7 +102,7 @@ complaintsRouter.post(
     });
 
     res.status(201).json({ complaint });
-  })
+  }),
 );
 
 // ── Add a comment (resident on own, admin on any) ──
@@ -128,7 +134,7 @@ complaintsRouter.post(
       });
     }
     res.status(201).json({ comment });
-  })
+  }),
 );
 
 // ── Admin: update status / priority / assignee ──
@@ -153,10 +159,10 @@ complaintsRouter.patch(
         ...body,
         resolvedAt:
           body.status === "RESOLVED" || body.status === "CLOSED"
-            ? existing.resolvedAt ?? new Date()
+            ? (existing.resolvedAt ?? new Date())
             : body.status
-            ? null
-            : undefined,
+              ? null
+              : undefined,
       },
     });
 
@@ -170,5 +176,5 @@ complaintsRouter.patch(
       });
     }
     res.json({ complaint });
-  })
+  }),
 );

@@ -51,11 +51,11 @@ pollsRouter.get(
       orderBy: { createdAt: "desc" },
       select: { id: true },
     });
-    const polls = (
-      await Promise.all(rows.map((r) => serialisePoll(r.id, req.user!.id)))
-    ).filter(Boolean);
+    const polls = (await Promise.all(rows.map((r) => serialisePoll(r.id, req.user!.id)))).filter(
+      Boolean,
+    );
     res.json({ polls });
-  })
+  }),
 );
 
 pollsRouter.get(
@@ -64,7 +64,7 @@ pollsRouter.get(
     const poll = await serialisePoll(req.params.id, req.user!.id);
     if (!poll) throw notFound("Poll not found");
     res.json({ poll });
-  })
+  }),
 );
 
 // ── Vote ──
@@ -97,7 +97,7 @@ pollsRouter.post(
 
     const result = await serialisePoll(poll.id, req.user!.id);
     res.json({ poll: result });
-  })
+  }),
 );
 
 // ── Admin: create poll ──
@@ -140,7 +140,7 @@ pollsRouter.post(
 
     const result = await serialisePoll(poll.id, req.user!.id);
     res.status(201).json({ poll: result });
-  })
+  }),
 );
 
 // ── Admin: close poll ──
@@ -151,5 +151,5 @@ pollsRouter.post(
     await prisma.poll.update({ where: { id: req.params.id }, data: { status: "CLOSED" } });
     const result = await serialisePoll(req.params.id, req.user!.id);
     res.json({ poll: result });
-  })
+  }),
 );

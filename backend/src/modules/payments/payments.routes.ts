@@ -25,7 +25,7 @@ paymentsRouter.get(
       .filter((b) => b.status !== "PAID" && b.status !== "WAIVED")
       .reduce((sum, b) => sum + b.amount, 0);
     res.json({ bills, dueTotal });
-  })
+  }),
 );
 
 // ── Resident: pay a bill (mock gateway) ──
@@ -59,5 +59,5 @@ paymentsRouter.post(
       prisma.maintenanceBill.update({ where: { id: bill.id }, data: { status: "PAID" } }),
     ]);
     res.json({ payment, status: "PAID" });
-  })
+  }),
 );

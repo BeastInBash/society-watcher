@@ -13,7 +13,7 @@ publicRouter.get(
       orderBy: { name: "asc" },
     });
     res.json({ societies });
-  })
+  }),
 );
 
 // Flats for a society (by join code) so a new resident can pick their home.
@@ -30,5 +30,5 @@ publicRouter.get(
       include: { tower: { select: { name: true } } },
     });
     res.json({ society: { id: society.id, name: society.name, code: society.code }, flats });
-  })
+  }),
 );

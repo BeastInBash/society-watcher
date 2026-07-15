@@ -94,8 +94,8 @@ async function main() {
   // ── Towers ────────────────────────────────────────────────────
   const [towerA, towerB, towerC] = await Promise.all(
     ["Tower A", "Tower B", "Tower C"].map((name) =>
-      prisma.tower.create({ data: { name, societyId: society.id } })
-    )
+      prisma.tower.create({ data: { name, societyId: society.id } }),
+    ),
   );
 
   // ── Flats ─────────────────────────────────────────────────────
@@ -163,13 +163,62 @@ async function main() {
   // ── Residents ─────────────────────────────────────────────────
   // Each entry becomes a User + a Resident row linked to a flat.
   const residentSpecs = [
-    { name: "Priya Sharma", email: "resident@portl.app", phone: "+91 98000 30001", flat: "A-101", type: ResidentType.OWNER, primary: true },
-    { name: "Arjun Mehta", email: "arjun@portl.app", phone: "+91 98000 30002", flat: "A-102", type: ResidentType.OWNER, primary: true },
-    { name: "Fatima Sheikh", email: "fatima@portl.app", phone: "+91 98000 30003", flat: "A-201", type: ResidentType.TENANT, primary: true },
-    { name: "Vikram Nair", email: "vikram@portl.app", phone: "+91 98000 30004", flat: "B-301", type: ResidentType.OWNER, primary: true },
-    { name: "Neha Gupta", email: "neha@portl.app", phone: "+91 98000 30005", flat: "B-401", type: ResidentType.TENANT, primary: true },
-    { name: "Karthik Reddy", email: "karthik@portl.app", phone: "+91 98000 30006", flat: "C-501", type: ResidentType.OWNER, primary: true },
-    { name: "Sana Iqbal", email: "sana@portl.app", phone: "+91 98000 30007", flat: "C-601", type: ResidentType.FAMILY, primary: false },
+    {
+      name: "Priya Sharma",
+      email: "resident@portl.app",
+      phone: "+91 98000 30001",
+      flat: "A-101",
+      type: ResidentType.OWNER,
+      primary: true,
+    },
+    {
+      name: "Arjun Mehta",
+      email: "arjun@portl.app",
+      phone: "+91 98000 30002",
+      flat: "A-102",
+      type: ResidentType.OWNER,
+      primary: true,
+    },
+    {
+      name: "Fatima Sheikh",
+      email: "fatima@portl.app",
+      phone: "+91 98000 30003",
+      flat: "A-201",
+      type: ResidentType.TENANT,
+      primary: true,
+    },
+    {
+      name: "Vikram Nair",
+      email: "vikram@portl.app",
+      phone: "+91 98000 30004",
+      flat: "B-301",
+      type: ResidentType.OWNER,
+      primary: true,
+    },
+    {
+      name: "Neha Gupta",
+      email: "neha@portl.app",
+      phone: "+91 98000 30005",
+      flat: "B-401",
+      type: ResidentType.TENANT,
+      primary: true,
+    },
+    {
+      name: "Karthik Reddy",
+      email: "karthik@portl.app",
+      phone: "+91 98000 30006",
+      flat: "C-501",
+      type: ResidentType.OWNER,
+      primary: true,
+    },
+    {
+      name: "Sana Iqbal",
+      email: "sana@portl.app",
+      phone: "+91 98000 30007",
+      flat: "C-601",
+      type: ResidentType.FAMILY,
+      primary: false,
+    },
   ];
 
   const residents: Record<string, { userId: string; residentId: string; flatId: string }> = {};
@@ -206,20 +255,82 @@ async function main() {
   // ── Amenities ─────────────────────────────────────────────────
   const [clubhouse, pool, gym, tennis, partyHall] = await Promise.all(
     [
-      { name: "Clubhouse", description: "Community hall for gatherings", capacity: 100, openTime: "08:00", closeTime: "22:00", slotMinutes: 120, chargePerSlot: 500 },
-      { name: "Swimming Pool", description: "Outdoor pool, lifeguard 6am–8pm", capacity: 30, openTime: "06:00", closeTime: "20:00", slotMinutes: 60, chargePerSlot: 0 },
-      { name: "Gymnasium", description: "Fully equipped fitness center", capacity: 20, openTime: "05:00", closeTime: "23:00", slotMinutes: 60, chargePerSlot: 0 },
-      { name: "Tennis Court", description: "Floodlit hard court", capacity: 4, openTime: "06:00", closeTime: "21:00", slotMinutes: 60, chargePerSlot: 200 },
-      { name: "Party Hall", description: "Rooftop hall for private events", capacity: 60, openTime: "10:00", closeTime: "23:00", slotMinutes: 180, chargePerSlot: 1500 },
-    ].map((a) => prisma.amenity.create({ data: { ...a, societyId: society.id } }))
+      {
+        name: "Clubhouse",
+        description: "Community hall for gatherings",
+        capacity: 100,
+        openTime: "08:00",
+        closeTime: "22:00",
+        slotMinutes: 120,
+        chargePerSlot: 500,
+      },
+      {
+        name: "Swimming Pool",
+        description: "Outdoor pool, lifeguard 6am–8pm",
+        capacity: 30,
+        openTime: "06:00",
+        closeTime: "20:00",
+        slotMinutes: 60,
+        chargePerSlot: 0,
+      },
+      {
+        name: "Gymnasium",
+        description: "Fully equipped fitness center",
+        capacity: 20,
+        openTime: "05:00",
+        closeTime: "23:00",
+        slotMinutes: 60,
+        chargePerSlot: 0,
+      },
+      {
+        name: "Tennis Court",
+        description: "Floodlit hard court",
+        capacity: 4,
+        openTime: "06:00",
+        closeTime: "21:00",
+        slotMinutes: 60,
+        chargePerSlot: 200,
+      },
+      {
+        name: "Party Hall",
+        description: "Rooftop hall for private events",
+        capacity: 60,
+        openTime: "10:00",
+        closeTime: "23:00",
+        slotMinutes: 180,
+        chargePerSlot: 1500,
+      },
+    ].map((a) => prisma.amenity.create({ data: { ...a, societyId: society.id } })),
   );
 
   // A couple of bookings for the demo resident.
   await prisma.amenityBooking.createMany({
     data: [
-      { amenityId: clubhouse.id, userId: priya.userId, date: days(2), startTime: "18:00", endTime: "20:00", status: BookingStatus.CONFIRMED, note: "Birthday party" },
-      { amenityId: tennis.id, userId: priya.userId, date: days(1), startTime: "07:00", endTime: "08:00", status: BookingStatus.CONFIRMED },
-      { amenityId: gym.id, userId: arjun.userId, date: days(1), startTime: "06:00", endTime: "07:00", status: BookingStatus.CONFIRMED },
+      {
+        amenityId: clubhouse.id,
+        userId: priya.userId,
+        date: days(2),
+        startTime: "18:00",
+        endTime: "20:00",
+        status: BookingStatus.CONFIRMED,
+        note: "Birthday party",
+      },
+      {
+        amenityId: tennis.id,
+        userId: priya.userId,
+        date: days(1),
+        startTime: "07:00",
+        endTime: "08:00",
+        status: BookingStatus.CONFIRMED,
+      },
+      {
+        amenityId: gym.id,
+        userId: arjun.userId,
+        date: days(1),
+        startTime: "06:00",
+        endTime: "07:00",
+        status: BookingStatus.CONFIRMED,
+      },
     ],
   });
   void [pool, partyHall];
@@ -227,10 +338,36 @@ async function main() {
   // ── Notices ───────────────────────────────────────────────────
   await prisma.notice.createMany({
     data: [
-      { title: "Water supply interruption", body: "Water will be shut off on the 20th from 10am–2pm for tank cleaning. Please store water in advance.", category: NoticeCategory.MAINTENANCE, pinned: true, societyId: society.id, authorId: admin.id },
-      { title: "Independence Day celebrations", body: "Join us at the clubhouse lawn on Aug 15 at 8am for flag hoisting followed by breakfast.", category: NoticeCategory.EVENT, societyId: society.id, authorId: admin.id },
-      { title: "Maintenance dues for this month", body: "Monthly maintenance bills are now available in the app. Kindly clear dues before the 10th.", category: NoticeCategory.FINANCE, societyId: society.id, authorId: admin.id },
-      { title: "Fire drill scheduled", body: "A mandatory fire safety drill will be conducted this Saturday at 11am. Participation is requested from all residents.", category: NoticeCategory.EMERGENCY, pinned: true, societyId: society.id, authorId: admin.id },
+      {
+        title: "Water supply interruption",
+        body: "Water will be shut off on the 20th from 10am–2pm for tank cleaning. Please store water in advance.",
+        category: NoticeCategory.MAINTENANCE,
+        pinned: true,
+        societyId: society.id,
+        authorId: admin.id,
+      },
+      {
+        title: "Independence Day celebrations",
+        body: "Join us at the clubhouse lawn on Aug 15 at 8am for flag hoisting followed by breakfast.",
+        category: NoticeCategory.EVENT,
+        societyId: society.id,
+        authorId: admin.id,
+      },
+      {
+        title: "Maintenance dues for this month",
+        body: "Monthly maintenance bills are now available in the app. Kindly clear dues before the 10th.",
+        category: NoticeCategory.FINANCE,
+        societyId: society.id,
+        authorId: admin.id,
+      },
+      {
+        title: "Fire drill scheduled",
+        body: "A mandatory fire safety drill will be conducted this Saturday at 11am. Participation is requested from all residents.",
+        category: NoticeCategory.EMERGENCY,
+        pinned: true,
+        societyId: society.id,
+        authorId: admin.id,
+      },
     ],
   });
 
@@ -266,7 +403,8 @@ async function main() {
   const complaint1 = await prisma.complaint.create({
     data: {
       title: "Leaking tap in kitchen",
-      description: "The kitchen tap has been dripping continuously for two days. Please send a plumber.",
+      description:
+        "The kitchen tap has been dripping continuously for two days. Please send a plumber.",
       category: ComplaintCategory.PLUMBING,
       status: ComplaintStatus.IN_PROGRESS,
       priority: Priority.MEDIUM,
@@ -297,7 +435,8 @@ async function main() {
   await prisma.complaint.create({
     data: {
       title: "Streetlight near gate not working",
-      description: "The streetlight near the main gate has been off for a week, making it dark at night.",
+      description:
+        "The streetlight near the main gate has been off for a week, making it dark at night.",
       category: ComplaintCategory.ELECTRICAL,
       status: ComplaintStatus.RESOLVED,
       priority: Priority.LOW,
@@ -306,7 +445,9 @@ async function main() {
       assigneeId: admin.id,
       resolvedAt: days(-1),
       comments: {
-        create: [{ authorId: admin.id, body: "Electrician replaced the fixture. Marking as resolved." }],
+        create: [
+          { authorId: admin.id, body: "Electrician replaced the fixture. Marking as resolved." },
+        ],
       },
     },
   });
@@ -315,21 +456,86 @@ async function main() {
   // ── Staff & service providers ─────────────────────────────────
   await prisma.staff.createMany({
     data: [
-      { name: "Ramesh Kumar", role: "Security Guard", phone: "+91 90000 20001", shift: "Day (6am–6pm)", societyId: society.id },
-      { name: "Suresh Yadav", role: "Security Guard", phone: "+91 90000 20002", shift: "Night (6pm–6am)", societyId: society.id },
-      { name: "Lakshmi Devi", role: "Housekeeping", phone: "+91 90000 40001", shift: "Day (7am–4pm)", societyId: society.id },
-      { name: "Mohan Das", role: "Gardener", phone: "+91 90000 40002", shift: "Morning (6am–11am)", societyId: society.id },
-      { name: "Ganesh Pillai", role: "Electrician", phone: "+91 90000 40003", shift: "On-call", societyId: society.id },
+      {
+        name: "Ramesh Kumar",
+        role: "Security Guard",
+        phone: "+91 90000 20001",
+        shift: "Day (6am–6pm)",
+        societyId: society.id,
+      },
+      {
+        name: "Suresh Yadav",
+        role: "Security Guard",
+        phone: "+91 90000 20002",
+        shift: "Night (6pm–6am)",
+        societyId: society.id,
+      },
+      {
+        name: "Lakshmi Devi",
+        role: "Housekeeping",
+        phone: "+91 90000 40001",
+        shift: "Day (7am–4pm)",
+        societyId: society.id,
+      },
+      {
+        name: "Mohan Das",
+        role: "Gardener",
+        phone: "+91 90000 40002",
+        shift: "Morning (6am–11am)",
+        societyId: society.id,
+      },
+      {
+        name: "Ganesh Pillai",
+        role: "Electrician",
+        phone: "+91 90000 40003",
+        shift: "On-call",
+        societyId: society.id,
+      },
     ],
   });
 
   await prisma.serviceProvider.createMany({
     data: [
-      { name: "QuickFix Plumbing", category: "Plumber", phone: "+91 91000 50001", rating: 4.5, verified: true, societyId: society.id },
-      { name: "BrightSpark Electricals", category: "Electrician", phone: "+91 91000 50002", rating: 4.2, verified: true, societyId: society.id },
-      { name: "Amma's Kitchen", category: "Maid / Cook", phone: "+91 91000 50003", rating: 4.8, verified: true, societyId: society.id },
-      { name: "Daily Fresh Milk", category: "Milk", phone: "+91 91000 50004", rating: 4.0, verified: false, societyId: society.id },
-      { name: "Morning Herald", category: "Newspaper", phone: "+91 91000 50005", rating: 3.9, verified: false, societyId: society.id },
+      {
+        name: "QuickFix Plumbing",
+        category: "Plumber",
+        phone: "+91 91000 50001",
+        rating: 4.5,
+        verified: true,
+        societyId: society.id,
+      },
+      {
+        name: "BrightSpark Electricals",
+        category: "Electrician",
+        phone: "+91 91000 50002",
+        rating: 4.2,
+        verified: true,
+        societyId: society.id,
+      },
+      {
+        name: "Amma's Kitchen",
+        category: "Maid / Cook",
+        phone: "+91 91000 50003",
+        rating: 4.8,
+        verified: true,
+        societyId: society.id,
+      },
+      {
+        name: "Daily Fresh Milk",
+        category: "Milk",
+        phone: "+91 91000 50004",
+        rating: 4.0,
+        verified: false,
+        societyId: society.id,
+      },
+      {
+        name: "Morning Herald",
+        category: "Newspaper",
+        phone: "+91 91000 50005",
+        rating: 3.9,
+        verified: false,
+        societyId: society.id,
+      },
     ],
   });
 
@@ -375,7 +581,9 @@ async function main() {
       flatId: priya.flatId,
       residentId: priya.residentId,
       registeredById: guard.id,
-      logs: { create: [{ action: "REGISTERED", actorId: guard.id, note: "Registered at main gate" }] },
+      logs: {
+        create: [{ action: "REGISTERED", actorId: guard.id, note: "Registered at main gate" }],
+      },
     },
   });
 
@@ -515,11 +723,41 @@ async function main() {
   // ── Notifications ─────────────────────────────────────────────
   await prisma.notification.createMany({
     data: [
-      { userId: priya.userId, type: NotificationType.VISITOR_REQUEST, title: "Visitor at the gate", body: "Amazon Delivery is waiting for your approval.", read: false },
-      { userId: priya.userId, type: NotificationType.COMPLAINT_UPDATE, title: "Complaint update", body: "Your complaint 'Leaking tap in kitchen' is now In Progress.", read: false },
-      { userId: priya.userId, type: NotificationType.NOTICE, title: "New notice", body: "Water supply interruption on the 20th.", read: true },
-      { userId: arjun.userId, type: NotificationType.VISITOR_UPDATE, title: "Visitor checked in", body: "Ola Cab has entered the society.", read: false },
-      { userId: admin.id, type: NotificationType.GENERAL, title: "New complaint raised", body: "Vikram Nair raised a complaint about the Tower B elevator.", read: false },
+      {
+        userId: priya.userId,
+        type: NotificationType.VISITOR_REQUEST,
+        title: "Visitor at the gate",
+        body: "Amazon Delivery is waiting for your approval.",
+        read: false,
+      },
+      {
+        userId: priya.userId,
+        type: NotificationType.COMPLAINT_UPDATE,
+        title: "Complaint update",
+        body: "Your complaint 'Leaking tap in kitchen' is now In Progress.",
+        read: false,
+      },
+      {
+        userId: priya.userId,
+        type: NotificationType.NOTICE,
+        title: "New notice",
+        body: "Water supply interruption on the 20th.",
+        read: true,
+      },
+      {
+        userId: arjun.userId,
+        type: NotificationType.VISITOR_UPDATE,
+        title: "Visitor checked in",
+        body: "Ola Cab has entered the society.",
+        read: false,
+      },
+      {
+        userId: admin.id,
+        type: NotificationType.GENERAL,
+        title: "New complaint raised",
+        body: "Vikram Nair raised a complaint about the Tower B elevator.",
+        read: false,
+      },
     ],
   });
 

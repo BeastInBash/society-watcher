@@ -19,17 +19,25 @@ adminRouter.get(
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    const [towers, flats, residents, guards, openComplaints, visitorsToday, activePolls, onPremises] =
-      await Promise.all([
-        prisma.tower.count({ where: { societyId } }),
-        prisma.flat.count({ where: { societyId } }),
-        prisma.user.count({ where: { societyId, role: "RESIDENT" } }),
-        prisma.user.count({ where: { societyId, role: "GUARD" } }),
-        prisma.complaint.count({ where: { societyId, status: { in: ["OPEN", "IN_PROGRESS"] } } }),
-        prisma.visitor.count({ where: { societyId, createdAt: { gte: today } } }),
-        prisma.poll.count({ where: { societyId, status: "OPEN" } }),
-        prisma.visitor.count({ where: { societyId, status: "CHECKED_IN" } }),
-      ]);
+    const [
+      towers,
+      flats,
+      residents,
+      guards,
+      openComplaints,
+      visitorsToday,
+      activePolls,
+      onPremises,
+    ] = await Promise.all([
+      prisma.tower.count({ where: { societyId } }),
+      prisma.flat.count({ where: { societyId } }),
+      prisma.user.count({ where: { societyId, role: "RESIDENT" } }),
+      prisma.user.count({ where: { societyId, role: "GUARD" } }),
+      prisma.complaint.count({ where: { societyId, status: { in: ["OPEN", "IN_PROGRESS"] } } }),
+      prisma.visitor.count({ where: { societyId, createdAt: { gte: today } } }),
+      prisma.poll.count({ where: { societyId, status: "OPEN" } }),
+      prisma.visitor.count({ where: { societyId, status: "CHECKED_IN" } }),
+    ]);
 
     res.json({
       stats: {
@@ -43,7 +51,7 @@ adminRouter.get(
         onPremises,
       },
     });
-  })
+  }),
 );
 
 // ── Towers ──
@@ -57,7 +65,7 @@ adminRouter.get(
       include: { _count: { select: { flats: true } } },
     });
     res.json({ towers });
-  })
+  }),
 );
 
 adminRouter.post(
@@ -67,7 +75,7 @@ adminRouter.post(
     const societyId = requireSociety(req.user!);
     const tower = await prisma.tower.create({ data: { name: req.body.name, societyId } });
     res.status(201).json({ tower });
-  })
+  }),
 );
 
 // ── Flats ──
@@ -87,7 +95,7 @@ adminRouter.get(
       },
     });
     res.json({ flats });
-  })
+  }),
 );
 
 const flatSchema = z.object({
@@ -108,7 +116,7 @@ adminRouter.post(
       data: { number: body.number, floor: body.floor, towerId: body.towerId, societyId },
     });
     res.status(201).json({ flat });
-  })
+  }),
 );
 
 // ── Residents & staff accounts ──
@@ -134,7 +142,7 @@ adminRouter.get(
       },
     });
     res.json({ residents });
-  })
+  }),
 );
 
 // ── Create a resident or guard account ──
@@ -179,7 +187,7 @@ adminRouter.post(
       select: { id: true, name: true, email: true, role: true },
     });
     res.status(201).json({ user });
-  })
+  }),
 );
 
 // ── Toggle account active state ──
@@ -196,7 +204,7 @@ adminRouter.patch(
       select: { id: true, isActive: true },
     });
     res.json({ user });
-  })
+  }),
 );
 
 // ── Generate maintenance bills for every flat in a period ──
@@ -225,5 +233,5 @@ adminRouter.post(
       })),
     });
     res.status(201).json({ created: result.count });
-  })
+  }),
 );

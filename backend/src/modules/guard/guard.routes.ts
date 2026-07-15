@@ -32,7 +32,7 @@ guardRouter.get(
       },
     });
     res.json({ residents });
-  })
+  }),
 );
 
 // ── Register a visitor & raise an approval request to the resident ──
@@ -65,12 +65,7 @@ guardRouter.post(
       const pa = await prisma.preApproval.findUnique({
         where: { code: body.preApprovalCode.toUpperCase() },
       });
-      if (
-        pa &&
-        pa.status === "ACTIVE" &&
-        pa.validUntil > new Date() &&
-        pa.usedCount < pa.maxUses
-      ) {
+      if (pa && pa.status === "ACTIVE" && pa.validUntil > new Date() && pa.usedCount < pa.maxUses) {
         preApprovalId = pa.id;
         autoApprove = true;
         await prisma.preApproval.update({
@@ -125,7 +120,7 @@ guardRouter.post(
     }
 
     res.status(201).json({ visitor, autoApprove });
-  })
+  }),
 );
 
 // ── Verify a pre-approval code without registering ──
@@ -143,7 +138,7 @@ guardRouter.get(
     if (!pa) throw notFound("Invalid code");
     const valid = pa.status === "ACTIVE" && pa.validUntil > new Date() && pa.usedCount < pa.maxUses;
     res.json({ preApproval: pa, valid });
-  })
+  }),
 );
 
 // ── Live gate: visitors currently on premises or awaiting entry ──
@@ -157,7 +152,7 @@ guardRouter.get(
       include: { flat: { select: { number: true, tower: { select: { name: true } } } } },
     });
     res.json({ visitors });
-  })
+  }),
 );
 
 // ── Society-wide movement log ──
@@ -172,7 +167,7 @@ guardRouter.get(
       include: { flat: { select: { number: true, tower: { select: { name: true } } } } },
     });
     res.json({ visitors });
-  })
+  }),
 );
 
 // ── Mark entry / exit ──
@@ -205,7 +200,7 @@ guardRouter.post(
     const societyId = requireSociety(req.user!);
     const visitor = await setMovement(req.params.id, societyId, "in", req.user!.id);
     res.json({ visitor });
-  })
+  }),
 );
 
 guardRouter.post(
@@ -214,5 +209,5 @@ guardRouter.post(
     const societyId = requireSociety(req.user!);
     const visitor = await setMovement(req.params.id, societyId, "out", req.user!.id);
     res.json({ visitor });
-  })
+  }),
 );
