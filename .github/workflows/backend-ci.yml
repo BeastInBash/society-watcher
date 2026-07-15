@@ -1,0 +1,56 @@
+name: Backend CI
+
+on:
+  pull_request:
+    paths:
+      - "backend/**"
+      - ".github/workflows/backend-ci.yml"
+
+# Cancel superseded runs on the same PR branch
+concurrency:
+  group: backend-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    working-directory: backend
+
+jobs:
+  backend:
+    name: Test, build, typecheck & lint
+    runs-on: ubuntu-latest
+
+    env:
+      # Prisma reads DATABASE_URL from prisma.config.ts at generate time.
+      # A placeholder is enough for `prisma generate` and `tsc` (no DB is contacted).
+      DATABASE_URL: postgresql://user:password@localhost:5432/portl?schema=public
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Generate Prisma client
+        run: bun run prisma:generate
+
+      - name: Typecheck
+        run: bun run typecheck
+
+      - name: Lint
+        run: bun run lint
+
+      - name: Format check
+        run: bun run format:check
+
+      - name: Build
+        run: bun run build
+
+      - name: Test
+        run: bun run test

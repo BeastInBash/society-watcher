@@ -1,5 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
-import type { Role } from "@prisma/client";
+import type { Role } from "@db";
 import { forbidden, unauthorized } from "../utils/http.ts";
 
 /** Restrict a route to one or more roles. Must run after `authenticate`. */

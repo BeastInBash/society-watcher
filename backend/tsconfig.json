@@ -16,8 +16,10 @@
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
+      "@db": ["generated/prisma/client.ts"],
+      "@db/*": ["generated/prisma/*"]
     }
   },
-  "include": ["src/**/*.ts", "prisma/**/*.ts"]
+  "include": ["src/**/*.ts", "prisma/**/*.ts", "generated/**/*.ts"]
 }

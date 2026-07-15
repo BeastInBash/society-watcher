@@ -1,123 +1,121 @@
-// Portl — Society Management Platform
-// Prisma schema (PostgreSQL)
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
 
 generator client {
-  provider = "prisma-client-js"
+    provider = "prisma-client"
+    output   = "../generated/prisma"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+    provider = "postgresql"
 }
 
-// ─────────────────────────────────────────────────────────────
-// Enums
-// ─────────────────────────────────────────────────────────────
-
 enum Role {
-  RESIDENT
-  GUARD
-  ADMIN
+    RESIDENT
+    GUARD
+    ADMIN
 }
 
 enum ResidentType {
-  OWNER
-  TENANT
-  FAMILY
+    OWNER
+    TENANT
+    FAMILY
 }
 
 enum VisitorKind {
-  GUEST
-  DELIVERY
-  CAB
-  SERVICE
-  STAFF
+    GUEST
+    DELIVERY
+    CAB
+    SERVICE
+    STAFF
 }
 
 enum VisitorStatus {
-  PENDING // awaiting resident approval
-  APPROVED // approved, not yet entered
-  DENIED
-  CHECKED_IN // entered the society
-  CHECKED_OUT // exited the society
-  EXPIRED
+    PENDING // awaiting resident approval
+    APPROVED // approved, not yet entered
+    DENIED
+    CHECKED_IN // entered the society
+    CHECKED_OUT // exited the society
+    EXPIRED
 }
 
 enum PreApprovalStatus {
-  ACTIVE
-  USED
-  EXPIRED
-  CANCELLED
+    ACTIVE
+    USED
+    EXPIRED
+    CANCELLED
 }
 
 enum ComplaintCategory {
-  PLUMBING
-  ELECTRICAL
-  HOUSEKEEPING
-  SECURITY
-  ELEVATOR
-  PARKING
-  NOISE
-  OTHER
+    PLUMBING
+    ELECTRICAL
+    HOUSEKEEPING
+    SECURITY
+    ELEVATOR
+    PARKING
+    NOISE
+    OTHER
 }
 
 enum ComplaintStatus {
-  OPEN
-  IN_PROGRESS
-  RESOLVED
-  CLOSED
+    OPEN
+    IN_PROGRESS
+    RESOLVED
+    CLOSED
 }
 
 enum Priority {
-  LOW
-  MEDIUM
-  HIGH
-  URGENT
+    LOW
+    MEDIUM
+    HIGH
+    URGENT
 }
 
 enum BookingStatus {
-  PENDING
-  CONFIRMED
-  CANCELLED
-  COMPLETED
+    PENDING
+    CONFIRMED
+    CANCELLED
+    COMPLETED
 }
 
 enum NoticeCategory {
-  GENERAL
-  MAINTENANCE
-  EVENT
-  EMERGENCY
-  FINANCE
+    GENERAL
+    MAINTENANCE
+    EVENT
+    EMERGENCY
+    FINANCE
 }
 
 enum PollStatus {
-  OPEN
-  CLOSED
+    OPEN
+    CLOSED
 }
 
 enum BillStatus {
-  PENDING
-  PAID
-  OVERDUE
-  WAIVED
+    PENDING
+    PAID
+    OVERDUE
+    WAIVED
 }
 
 enum PaymentMethod {
-  UPI
-  CARD
-  NETBANKING
-  CASH
+    UPI
+    CARD
+    NETBANKING
+    CASH
 }
 
 enum NotificationType {
-  VISITOR_REQUEST
-  VISITOR_UPDATE
-  COMPLAINT_UPDATE
-  BOOKING_UPDATE
-  NOTICE
-  POLL
-  PAYMENT
-  GENERAL
+    VISITOR_REQUEST
+    VISITOR_UPDATE
+    COMPLAINT_UPDATE
+    BOOKING_UPDATE
+    NOTICE
+    POLL
+    PAYMENT
+    GENERAL
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -125,54 +123,54 @@ enum NotificationType {
 // ─────────────────────────────────────────────────────────────
 
 model Society {
-  id        String   @id @default(cuid())
-  name      String
-  address   String?
-  city      String?
-  code      String   @unique // join code used at signup
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+    id        String   @id @default(cuid())
+    name      String
+    address   String?
+    city      String?
+    code      String   @unique // join code used at signup
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 
-  towers           Tower[]
-  flats            Flat[]
-  users            User[]
-  amenities        Amenity[]
-  notices          Notice[]
-  polls            Poll[]
-  complaints       Complaint[]
-  staff            Staff[]
-  serviceProviders ServiceProvider[]
-  visitors         Visitor[]
-  bills            MaintenanceBill[]
+    towers           Tower[]
+    flats            Flat[]
+    users            User[]
+    amenities        Amenity[]
+    notices          Notice[]
+    polls            Poll[]
+    complaints       Complaint[]
+    staff            Staff[]
+    serviceProviders ServiceProvider[]
+    visitors         Visitor[]
+    bills            MaintenanceBill[]
 }
 
 model Tower {
-  id        String   @id @default(cuid())
-  name      String
-  societyId String
-  society   Society  @relation(fields: [societyId], references: [id], onDelete: Cascade)
-  flats     Flat[]
-  createdAt DateTime @default(now())
+    id        String   @id @default(cuid())
+    name      String
+    societyId String
+    society   Society  @relation(fields: [societyId], references: [id], onDelete: Cascade)
+    flats     Flat[]
+    createdAt DateTime @default(now())
 
-  @@unique([societyId, name])
-  @@index([societyId])
+    @@unique([societyId, name])
+    @@index([societyId])
 }
 
 model Flat {
-  id        String   @id @default(cuid())
-  number    String // e.g. "1204"
-  floor     Int?
-  societyId String
-  society   Society  @relation(fields: [societyId], references: [id], onDelete: Cascade)
-  towerId   String
-  tower     Tower    @relation(fields: [towerId], references: [id], onDelete: Cascade)
-  residents Resident[]
-  visitors  Visitor[]
-  bills     MaintenanceBill[]
-  createdAt DateTime @default(now())
+    id        String            @id @default(cuid())
+    number    String // e.g. "1204"
+    floor     Int?
+    societyId String
+    society   Society           @relation(fields: [societyId], references: [id], onDelete: Cascade)
+    towerId   String
+    tower     Tower             @relation(fields: [towerId], references: [id], onDelete: Cascade)
+    residents Resident[]
+    visitors  Visitor[]
+    bills     MaintenanceBill[]
+    createdAt DateTime          @default(now())
 
-  @@unique([towerId, number])
-  @@index([societyId])
+    @@unique([towerId, number])
+    @@index([societyId])
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -180,78 +178,78 @@ model Flat {
 // ─────────────────────────────────────────────────────────────
 
 model User {
-  id           String   @id @default(cuid())
-  name         String
-  email        String   @unique
-  phone        String?
-  passwordHash String
-  role         Role     @default(RESIDENT)
-  avatarUrl    String?
-  isActive     Boolean  @default(true)
+    id           String  @id @default(cuid())
+    name         String
+    email        String  @unique
+    phone        String?
+    passwordHash String
+    role         Role    @default(RESIDENT)
+    avatarUrl    String?
+    isActive     Boolean @default(true)
 
-  societyId String?
-  society   Society? @relation(fields: [societyId], references: [id], onDelete: SetNull)
+    societyId String?
+    society   Society? @relation(fields: [societyId], references: [id], onDelete: SetNull)
 
-  resident Resident?
+    resident Resident?
 
-  pushTokens         PushToken[]
-  notifications      Notification[]
-  raisedComplaints   Complaint[]      @relation("ComplaintRaisedBy")
-  assignedComplaints Complaint[]      @relation("ComplaintAssignee")
-  complaintComments  ComplaintComment[]
-  bookings           AmenityBooking[]
-  pollVotes          PollVote[]
-  authoredNotices    Notice[]         @relation("NoticeAuthor")
-  authoredPolls      Poll[]           @relation("PollAuthor")
-  registeredVisitors Visitor[]        @relation("VisitorRegisteredBy")
-  payments           Payment[]
-  refreshTokens      RefreshToken[]
+    pushTokens         PushToken[]
+    notifications      Notification[]
+    raisedComplaints   Complaint[]        @relation("ComplaintRaisedBy")
+    assignedComplaints Complaint[]        @relation("ComplaintAssignee")
+    complaintComments  ComplaintComment[]
+    bookings           AmenityBooking[]
+    pollVotes          PollVote[]
+    authoredNotices    Notice[]           @relation("NoticeAuthor")
+    authoredPolls      Poll[]             @relation("PollAuthor")
+    registeredVisitors Visitor[]          @relation("VisitorRegisteredBy")
+    payments           Payment[]
+    refreshTokens      RefreshToken[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 
-  @@index([societyId])
-  @@index([role])
+    @@index([societyId])
+    @@index([role])
 }
 
 model Resident {
-  id        String       @id @default(cuid())
-  userId    String       @unique
-  user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  flatId    String
-  flat      Flat         @relation(fields: [flatId], references: [id], onDelete: Cascade)
-  type      ResidentType @default(OWNER)
-  isPrimary Boolean      @default(false)
+    id        String       @id @default(cuid())
+    userId    String       @unique
+    user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+    flatId    String
+    flat      Flat         @relation(fields: [flatId], references: [id], onDelete: Cascade)
+    type      ResidentType @default(OWNER)
+    isPrimary Boolean      @default(false)
 
-  visitors     Visitor[]
-  preApprovals PreApproval[]
+    visitors     Visitor[]
+    preApprovals PreApproval[]
 
-  createdAt DateTime @default(now())
+    createdAt DateTime @default(now())
 
-  @@index([flatId])
+    @@index([flatId])
 }
 
 model RefreshToken {
-  id        String   @id @default(cuid())
-  token     String   @unique
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  expiresAt DateTime
-  revoked   Boolean  @default(false)
-  createdAt DateTime @default(now())
+    id        String   @id @default(cuid())
+    token     String   @unique
+    userId    String
+    user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    expiresAt DateTime
+    revoked   Boolean  @default(false)
+    createdAt DateTime @default(now())
 
-  @@index([userId])
+    @@index([userId])
 }
 
 model PushToken {
-  id       String @id @default(cuid())
-  token    String @unique // Expo push token
-  userId   String
-  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  platform String?
-  createdAt DateTime @default(now())
+    id        String   @id @default(cuid())
+    token     String   @unique // Expo push token
+    userId    String
+    user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    platform  String?
+    createdAt DateTime @default(now())
 
-  @@index([userId])
+    @@index([userId])
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -259,78 +257,78 @@ model PushToken {
 // ─────────────────────────────────────────────────────────────
 
 model Visitor {
-  id        String        @id @default(cuid())
-  name      String
-  phone     String?
-  kind      VisitorKind   @default(GUEST)
-  company   String? // delivery/cab company or service provider name
-  purpose   String?
-  photoUrl  String?
-  vehicleNo String?
-  status    VisitorStatus @default(PENDING)
+    id        String        @id @default(cuid())
+    name      String
+    phone     String?
+    kind      VisitorKind   @default(GUEST)
+    company   String? // delivery/cab company or service provider name
+    purpose   String?
+    photoUrl  String?
+    vehicleNo String?
+    status    VisitorStatus @default(PENDING)
 
-  societyId String
-  society   Society @relation(fields: [societyId], references: [id], onDelete: Cascade)
-  flatId    String
-  flat      Flat    @relation(fields: [flatId], references: [id], onDelete: Cascade)
+    societyId String
+    society   Society @relation(fields: [societyId], references: [id], onDelete: Cascade)
+    flatId    String
+    flat      Flat    @relation(fields: [flatId], references: [id], onDelete: Cascade)
 
-  residentId String?
-  resident   Resident? @relation(fields: [residentId], references: [id], onDelete: SetNull)
+    residentId String?
+    resident   Resident? @relation(fields: [residentId], references: [id], onDelete: SetNull)
 
-  registeredById String? // guard who registered
-  registeredBy   User?   @relation("VisitorRegisteredBy", fields: [registeredById], references: [id], onDelete: SetNull)
+    registeredById String? // guard who registered
+    registeredBy   User?   @relation("VisitorRegisteredBy", fields: [registeredById], references: [id], onDelete: SetNull)
 
-  preApprovalId String?
-  preApproval   PreApproval? @relation(fields: [preApprovalId], references: [id], onDelete: SetNull)
+    preApprovalId String?
+    preApproval   PreApproval? @relation(fields: [preApprovalId], references: [id], onDelete: SetNull)
 
-  approvedAt DateTime?
-  deniedAt   DateTime?
-  checkInAt  DateTime?
-  checkOutAt DateTime?
-  expectedAt DateTime?
+    approvedAt DateTime?
+    deniedAt   DateTime?
+    checkInAt  DateTime?
+    checkOutAt DateTime?
+    expectedAt DateTime?
 
-  logs VisitorLog[]
+    logs VisitorLog[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 
-  @@index([societyId, status])
-  @@index([flatId])
+    @@index([societyId, status])
+    @@index([flatId])
 }
 
 model VisitorLog {
-  id        String   @id @default(cuid())
-  visitorId String
-  visitor   Visitor  @relation(fields: [visitorId], references: [id], onDelete: Cascade)
-  action    String // REGISTERED, APPROVED, DENIED, CHECKED_IN, CHECKED_OUT
-  note      String?
-  actorId   String?
-  createdAt DateTime @default(now())
+    id        String   @id @default(cuid())
+    visitorId String
+    visitor   Visitor  @relation(fields: [visitorId], references: [id], onDelete: Cascade)
+    action    String // REGISTERED, APPROVED, DENIED, CHECKED_IN, CHECKED_OUT
+    note      String?
+    actorId   String?
+    createdAt DateTime @default(now())
 
-  @@index([visitorId])
+    @@index([visitorId])
 }
 
 model PreApproval {
-  id         String            @id @default(cuid())
-  code       String            @unique // shareable / gate pass code
-  name       String
-  phone      String?
-  kind       VisitorKind       @default(GUEST)
-  status     PreApprovalStatus @default(ACTIVE)
-  validFrom  DateTime          @default(now())
-  validUntil DateTime
-  maxUses    Int               @default(1)
-  usedCount  Int               @default(0)
+    id         String            @id @default(cuid())
+    code       String            @unique // shareable / gate pass code
+    name       String
+    phone      String?
+    kind       VisitorKind       @default(GUEST)
+    status     PreApprovalStatus @default(ACTIVE)
+    validFrom  DateTime          @default(now())
+    validUntil DateTime
+    maxUses    Int               @default(1)
+    usedCount  Int               @default(0)
 
-  residentId String
-  resident   Resident @relation(fields: [residentId], references: [id], onDelete: Cascade)
+    residentId String
+    resident   Resident @relation(fields: [residentId], references: [id], onDelete: Cascade)
 
-  visitors Visitor[]
+    visitors Visitor[]
 
-  createdAt DateTime @default(now())
+    createdAt DateTime @default(now())
 
-  @@index([residentId])
-  @@index([status])
+    @@index([residentId])
+    @@index([status])
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -338,32 +336,32 @@ model PreApproval {
 // ─────────────────────────────────────────────────────────────
 
 model Staff {
-  id        String  @id @default(cuid())
-  name      String
-  role      String // Guard, Housekeeping, Gardener, Electrician...
-  phone     String?
-  photoUrl  String?
-  shift     String?
-  isActive  Boolean @default(true)
-  societyId String
-  society   Society @relation(fields: [societyId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now())
+    id        String   @id @default(cuid())
+    name      String
+    role      String // Guard, Housekeeping, Gardener, Electrician...
+    phone     String?
+    photoUrl  String?
+    shift     String?
+    isActive  Boolean  @default(true)
+    societyId String
+    society   Society  @relation(fields: [societyId], references: [id], onDelete: Cascade)
+    createdAt DateTime @default(now())
 
-  @@index([societyId])
+    @@index([societyId])
 }
 
 model ServiceProvider {
-  id        String  @id @default(cuid())
-  name      String
-  category  String // Plumber, Electrician, Milk, Newspaper, Maid...
-  phone     String?
-  rating    Float?
-  verified  Boolean @default(false)
-  societyId String
-  society   Society @relation(fields: [societyId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now())
+    id        String   @id @default(cuid())
+    name      String
+    category  String // Plumber, Electrician, Milk, Newspaper, Maid...
+    phone     String?
+    rating    Float?
+    verified  Boolean  @default(false)
+    societyId String
+    society   Society  @relation(fields: [societyId], references: [id], onDelete: Cascade)
+    createdAt DateTime @default(now())
 
-  @@index([societyId])
+    @@index([societyId])
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -371,42 +369,42 @@ model ServiceProvider {
 // ─────────────────────────────────────────────────────────────
 
 model Amenity {
-  id           String  @id @default(cuid())
-  name         String
-  description  String?
-  imageUrl     String?
-  capacity     Int?
-  openTime     String  @default("06:00")
-  closeTime    String  @default("22:00")
-  slotMinutes  Int     @default(60)
-  chargePerSlot Float  @default(0)
-  isActive     Boolean @default(true)
+    id            String  @id @default(cuid())
+    name          String
+    description   String?
+    imageUrl      String?
+    capacity      Int?
+    openTime      String  @default("06:00")
+    closeTime     String  @default("22:00")
+    slotMinutes   Int     @default(60)
+    chargePerSlot Float   @default(0)
+    isActive      Boolean @default(true)
 
-  societyId String
-  society   Society          @relation(fields: [societyId], references: [id], onDelete: Cascade)
-  bookings  AmenityBooking[]
+    societyId String
+    society   Society          @relation(fields: [societyId], references: [id], onDelete: Cascade)
+    bookings  AmenityBooking[]
 
-  createdAt DateTime @default(now())
+    createdAt DateTime @default(now())
 
-  @@index([societyId])
+    @@index([societyId])
 }
 
 model AmenityBooking {
-  id        String        @id @default(cuid())
-  amenityId String
-  amenity   Amenity       @relation(fields: [amenityId], references: [id], onDelete: Cascade)
-  userId    String
-  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  date      DateTime
-  startTime String // "18:00"
-  endTime   String // "19:00"
-  status    BookingStatus @default(CONFIRMED)
-  note      String?
+    id        String        @id @default(cuid())
+    amenityId String
+    amenity   Amenity       @relation(fields: [amenityId], references: [id], onDelete: Cascade)
+    userId    String
+    user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+    date      DateTime
+    startTime String // "18:00"
+    endTime   String // "19:00"
+    status    BookingStatus @default(CONFIRMED)
+    note      String?
 
-  createdAt DateTime @default(now())
+    createdAt DateTime @default(now())
 
-  @@index([amenityId, date])
-  @@index([userId])
+    @@index([amenityId, date])
+    @@index([userId])
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -414,22 +412,22 @@ model AmenityBooking {
 // ─────────────────────────────────────────────────────────────
 
 model Notice {
-  id        String         @id @default(cuid())
-  title     String
-  body      String
-  category  NoticeCategory @default(GENERAL)
-  pinned    Boolean        @default(false)
-  imageUrl  String?
+    id       String         @id @default(cuid())
+    title    String
+    body     String
+    category NoticeCategory @default(GENERAL)
+    pinned   Boolean        @default(false)
+    imageUrl String?
 
-  societyId String
-  society   Society @relation(fields: [societyId], references: [id], onDelete: Cascade)
-  authorId  String?
-  author    User?   @relation("NoticeAuthor", fields: [authorId], references: [id], onDelete: SetNull)
+    societyId String
+    society   Society @relation(fields: [societyId], references: [id], onDelete: Cascade)
+    authorId  String?
+    author    User?   @relation("NoticeAuthor", fields: [authorId], references: [id], onDelete: SetNull)
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 
-  @@index([societyId])
+    @@index([societyId])
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -437,47 +435,47 @@ model Notice {
 // ─────────────────────────────────────────────────────────────
 
 model Poll {
-  id        String     @id @default(cuid())
-  question  String
-  status    PollStatus @default(OPEN)
-  multiple  Boolean    @default(false)
-  closesAt  DateTime?
+    id       String     @id @default(cuid())
+    question String
+    status   PollStatus @default(OPEN)
+    multiple Boolean    @default(false)
+    closesAt DateTime?
 
-  societyId String
-  society   Society @relation(fields: [societyId], references: [id], onDelete: Cascade)
-  authorId  String?
-  author    User?   @relation("PollAuthor", fields: [authorId], references: [id], onDelete: SetNull)
+    societyId String
+    society   Society @relation(fields: [societyId], references: [id], onDelete: Cascade)
+    authorId  String?
+    author    User?   @relation("PollAuthor", fields: [authorId], references: [id], onDelete: SetNull)
 
-  options PollOption[]
-  votes   PollVote[]
+    options PollOption[]
+    votes   PollVote[]
 
-  createdAt DateTime @default(now())
+    createdAt DateTime @default(now())
 
-  @@index([societyId])
+    @@index([societyId])
 }
 
 model PollOption {
-  id     String     @id @default(cuid())
-  text   String
-  pollId String
-  poll   Poll       @relation(fields: [pollId], references: [id], onDelete: Cascade)
-  votes  PollVote[]
+    id     String     @id @default(cuid())
+    text   String
+    pollId String
+    poll   Poll       @relation(fields: [pollId], references: [id], onDelete: Cascade)
+    votes  PollVote[]
 
-  @@index([pollId])
+    @@index([pollId])
 }
 
 model PollVote {
-  id       String     @id @default(cuid())
-  pollId   String
-  poll     Poll       @relation(fields: [pollId], references: [id], onDelete: Cascade)
-  optionId String
-  option   PollOption @relation(fields: [optionId], references: [id], onDelete: Cascade)
-  userId   String
-  user     User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt DateTime  @default(now())
+    id        String     @id @default(cuid())
+    pollId    String
+    poll      Poll       @relation(fields: [pollId], references: [id], onDelete: Cascade)
+    optionId  String
+    option    PollOption @relation(fields: [optionId], references: [id], onDelete: Cascade)
+    userId    String
+    user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+    createdAt DateTime   @default(now())
 
-  @@unique([pollId, userId, optionId])
-  @@index([pollId])
+    @@unique([pollId, userId, optionId])
+    @@index([pollId])
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -485,42 +483,42 @@ model PollVote {
 // ─────────────────────────────────────────────────────────────
 
 model Complaint {
-  id          String            @id @default(cuid())
-  title       String
-  description String
-  category    ComplaintCategory @default(OTHER)
-  status      ComplaintStatus   @default(OPEN)
-  priority    Priority          @default(MEDIUM)
+    id          String            @id @default(cuid())
+    title       String
+    description String
+    category    ComplaintCategory @default(OTHER)
+    status      ComplaintStatus   @default(OPEN)
+    priority    Priority          @default(MEDIUM)
 
-  societyId String
-  society   Society @relation(fields: [societyId], references: [id], onDelete: Cascade)
+    societyId String
+    society   Society @relation(fields: [societyId], references: [id], onDelete: Cascade)
 
-  raisedById String
-  raisedBy   User   @relation("ComplaintRaisedBy", fields: [raisedById], references: [id], onDelete: Cascade)
+    raisedById String
+    raisedBy   User   @relation("ComplaintRaisedBy", fields: [raisedById], references: [id], onDelete: Cascade)
 
-  assigneeId String?
-  assignee   User?   @relation("ComplaintAssignee", fields: [assigneeId], references: [id], onDelete: SetNull)
+    assigneeId String?
+    assignee   User?   @relation("ComplaintAssignee", fields: [assigneeId], references: [id], onDelete: SetNull)
 
-  comments ComplaintComment[]
+    comments ComplaintComment[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  resolvedAt DateTime?
+    createdAt  DateTime  @default(now())
+    updatedAt  DateTime  @updatedAt
+    resolvedAt DateTime?
 
-  @@index([societyId, status])
-  @@index([raisedById])
+    @@index([societyId, status])
+    @@index([raisedById])
 }
 
 model ComplaintComment {
-  id          String    @id @default(cuid())
-  complaintId String
-  complaint   Complaint @relation(fields: [complaintId], references: [id], onDelete: Cascade)
-  authorId    String
-  author      User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  body        String
-  createdAt   DateTime  @default(now())
+    id          String    @id @default(cuid())
+    complaintId String
+    complaint   Complaint @relation(fields: [complaintId], references: [id], onDelete: Cascade)
+    authorId    String
+    author      User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+    body        String
+    createdAt   DateTime  @default(now())
 
-  @@index([complaintId])
+    @@index([complaintId])
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -528,37 +526,37 @@ model ComplaintComment {
 // ─────────────────────────────────────────────────────────────
 
 model MaintenanceBill {
-  id        String     @id @default(cuid())
-  title     String // "Maintenance — Jul 2026"
-  amount    Float
-  dueDate   DateTime
-  status    BillStatus @default(PENDING)
-  period    String? // "2026-07"
+    id      String     @id @default(cuid())
+    title   String // "Maintenance — Jul 2026"
+    amount  Float
+    dueDate DateTime
+    status  BillStatus @default(PENDING)
+    period  String? // "2026-07"
 
-  societyId String
-  society   Society @relation(fields: [societyId], references: [id], onDelete: Cascade)
-  flatId    String
-  flat      Flat    @relation(fields: [flatId], references: [id], onDelete: Cascade)
+    societyId String
+    society   Society @relation(fields: [societyId], references: [id], onDelete: Cascade)
+    flatId    String
+    flat      Flat    @relation(fields: [flatId], references: [id], onDelete: Cascade)
 
-  payments Payment[]
+    payments Payment[]
 
-  createdAt DateTime @default(now())
+    createdAt DateTime @default(now())
 
-  @@index([flatId, status])
+    @@index([flatId, status])
 }
 
 model Payment {
-  id       String        @id @default(cuid())
-  billId   String
-  bill     MaintenanceBill @relation(fields: [billId], references: [id], onDelete: Cascade)
-  userId   String
-  user     User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  amount   Float
-  method   PaymentMethod @default(UPI)
-  reference String? // mock txn id
-  createdAt DateTime     @default(now())
+    id        String          @id @default(cuid())
+    billId    String
+    bill      MaintenanceBill @relation(fields: [billId], references: [id], onDelete: Cascade)
+    userId    String
+    user      User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+    amount    Float
+    method    PaymentMethod   @default(UPI)
+    reference String? // mock txn id
+    createdAt DateTime        @default(now())
 
-  @@index([billId])
+    @@index([billId])
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -566,15 +564,15 @@ model Payment {
 // ─────────────────────────────────────────────────────────────
 
 model Notification {
-  id        String           @id @default(cuid())
-  userId    String
-  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
-  type      NotificationType @default(GENERAL)
-  title     String
-  body      String
-  data      Json?
-  read      Boolean          @default(false)
-  createdAt DateTime         @default(now())
+    id        String           @id @default(cuid())
+    userId    String
+    user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+    type      NotificationType @default(GENERAL)
+    title     String
+    body      String
+    data      Json?
+    read      Boolean          @default(false)
+    createdAt DateTime         @default(now())
 
-  @@index([userId, read])
+    @@index([userId, read])
 }

@@ -1,6 +1,6 @@
 import { Expo, type ExpoPushMessage } from "expo-server-sdk";
 import { prisma } from "./prisma.ts";
-import type { NotificationType, Prisma } from "@prisma/client";
+import type { NotificationType, Prisma } from "@db";
 
 const expo = new Expo();
 

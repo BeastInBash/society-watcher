@@ -1,5 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
-import { Prisma } from "@prisma/client";
+import { Prisma } from "@db";
 import { AppError } from "../utils/http.ts";
 
 export function notFoundHandler(_req: Request, res: Response) {
