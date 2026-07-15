@@ -1,0 +1,39 @@
+# deps
+node_modules/
+**/node_modules/
+.pnp
+.pnp.js
+
+# env
+.env
+.env.local
+**/.env
+!**/.env.example
+
+# builds
+dist/
+build/
+web-build/
+**/dist/
+
+# expo
+.expo/
+.expo-shared/
+*.orig.*
+mobile/.expo/
+mobile/ios/
+mobile/android/
+
+# logs
+*.log
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# misc
+.DS_Store
+*.pem
+coverage/
+.idea/
+.vscode/
+bun.lockb.bak

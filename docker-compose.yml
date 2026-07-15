@@ -1,0 +1,21 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: portl-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: portl
+      POSTGRES_PASSWORD: portl
+      POSTGRES_DB: portl
+    ports:
+      - "5433:5432"
+    volumes:
+      - portl_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U portl -d portl"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  portl_db_data:
