@@ -6,7 +6,7 @@ import "dotenv/config";
 const app = createApp();
 
 const server = app.listen(env.port, () => {
-  console.log(`🐾 Portl API listening on http://localhost:${env.port} (${env.nodeEnv})`);
+  console.log(`Portl API listening on http://localhost:${env.port} (${env.nodeEnv})`);
 });
 
 const shutdown = async (signal: string) => {
